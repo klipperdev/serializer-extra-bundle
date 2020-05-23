@@ -51,6 +51,10 @@ class DoctrineAssociationSubscriber implements EventSubscriberInterface
         if (null !== $classMeta) {
             /** @var PropertyMetadata $propertyMeta */
             foreach ($classMeta->propertyMetadata as $propertyMeta) {
+                if (null === $propertyMeta->type) {
+                    continue;
+                }
+
                 if ('Relation' === $propertyMeta->type['name']) {
                     $propertyMeta->type['name'] = Relation::class;
                 }
