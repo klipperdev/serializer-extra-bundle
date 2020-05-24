@@ -11,7 +11,7 @@
 
 namespace Klipper\Bundle\SerializerExtraBundle\Handler;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 
 /**

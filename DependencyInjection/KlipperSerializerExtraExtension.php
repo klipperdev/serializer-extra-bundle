@@ -11,7 +11,7 @@
 
 namespace Klipper\Bundle\SerializerExtraBundle\DependencyInjection;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Klipper\Bundle\SecurityBundle\KlipperSecurityBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
