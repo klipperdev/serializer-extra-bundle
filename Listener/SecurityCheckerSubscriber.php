@@ -68,7 +68,7 @@ class SecurityCheckerSubscriber implements EventSubscriberInterface
             foreach ($classMeta->propertyMetadata as $propertyMeta) {
                 if (null === $propertyMeta->excludeIf) {
                     $propertyMeta->excludeIf = sprintf(
-                        '!is_granted("perm_read", [object, "%s"])',
+                        '!is_granted("perm:read", [object, "%s"])',
                         $propertyMeta->name
                     );
                 }
