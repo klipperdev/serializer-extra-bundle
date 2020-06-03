@@ -22,9 +22,6 @@ use Klipper\Bundle\SerializerExtraBundle\Type\Relation;
  */
 class DoctrineAssociationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -35,9 +32,6 @@ class DoctrineAssociationSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ObjectEvent $event The event
-     */
     public function onPreSerialize(ObjectEvent $event): void
     {
         $object = $event->getObject();

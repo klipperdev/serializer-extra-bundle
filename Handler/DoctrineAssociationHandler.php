@@ -19,14 +19,9 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
  */
 class DoctrineAssociationHandler
 {
-    /**
-     * @var ManagerRegistry
-     */
-    protected $doctrine;
+    protected ManagerRegistry $doctrine;
 
     /**
-     * Constructor.
-     *
      * @param ManagerRegistry $doctrine The doctrine registry
      */
     public function __construct(ManagerRegistry $doctrine)

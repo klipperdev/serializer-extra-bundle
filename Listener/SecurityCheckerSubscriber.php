@@ -22,24 +22,13 @@ use Klipper\Component\Security\Permission\PermissionManagerInterface;
  */
 class SecurityCheckerSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PermissionManagerInterface
-     */
-    private $permissionManager;
+    private PermissionManagerInterface $permissionManager;
 
-    /**
-     * Constructor.
-     *
-     * @param PermissionManagerInterface $permissionManager The permission manager
-     */
     public function __construct(PermissionManagerInterface $permissionManager)
     {
         $this->permissionManager = $permissionManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -50,9 +39,6 @@ class SecurityCheckerSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ObjectEvent $event The event
-     */
     public function onPreSerialize(ObjectEvent $event): void
     {
         $object = $event->getObject();

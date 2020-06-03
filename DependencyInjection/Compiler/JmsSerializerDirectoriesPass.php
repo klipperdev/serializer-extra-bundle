@@ -23,8 +23,6 @@ class JmsSerializerDirectoriesPass implements CompilerPassInterface
     use PriorityTaggedServiceTrait;
 
     /**
-     * {@inheritdoc}
-     *
      * @throws
      */
     public function process(ContainerBuilder $container): void
