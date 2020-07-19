@@ -54,7 +54,9 @@ class DoctrineAssociationSubscriber implements EventSubscriberInterface
                 }
 
                 if (is_a($propertyMeta->type['name'], Relation::class, true)) {
-                    $propertyMeta->serializedName .= '_id';
+                    if (0 !== substr_compare($propertyMeta->serializedName, '_id', -\strlen('_id'))) {
+                        $propertyMeta->serializedName .= '_id';
+                    }
                 }
             }
         }
