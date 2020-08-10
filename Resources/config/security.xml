@@ -10,5 +10,12 @@
             <tag name="jms_serializer.event_subscriber" priority="-1000" />
             <argument type="service" id="klipper_security.permission_manager" />
         </service>
+
+        <service id="klipper_serializer_extra.subscriber.doctrine_proxy"
+                 class="Klipper\Bundle\SerializerExtraBundle\Listener\SecurityDoctrineProxySubscriber"
+                 decorates="jms_serializer.doctrine_proxy_subscriber">
+            <tag name="jms_serializer.event_subscriber" />
+            <argument type="service" id="klipper_serializer_extra.subscriber.doctrine_proxy.inner" />
+        </service>
     </services>
 </container>
