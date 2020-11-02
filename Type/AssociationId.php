@@ -14,6 +14,6 @@ namespace Klipper\Bundle\SerializerExtraBundle\Type;
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
  */
-class Relation
+class AssociationId
 {
 }

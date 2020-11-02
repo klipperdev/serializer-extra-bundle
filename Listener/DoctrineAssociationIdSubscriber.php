@@ -17,12 +17,12 @@ use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
-use Klipper\Bundle\SerializerExtraBundle\Type\Relation;
+use Klipper\Bundle\SerializerExtraBundle\Type\AssociationId;
 
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
  */
-class DoctrineAssociationSubscriber implements EventSubscriberInterface
+class DoctrineAssociationIdSubscriber implements EventSubscriberInterface
 {
     protected ManagerRegistry $doctrine;
 
@@ -62,11 +62,11 @@ class DoctrineAssociationSubscriber implements EventSubscriberInterface
                     continue;
                 }
 
-                if ('Relation' === $propertyMeta->type['name']) {
-                    $propertyMeta->type['name'] = Relation::class;
+                if ('AssociationId' === $propertyMeta->type['name']) {
+                    $propertyMeta->type['name'] = AssociationId::class;
                 }
 
-                if (is_a($propertyMeta->type['name'], Relation::class, true)) {
+                if (is_a($propertyMeta->type['name'], AssociationId::class, true)) {
                     $classMeta->propertyMetadata[$i] = $staticPropMeta = new StaticPropertyMetadata(
                         $propertyMeta->class,
                         $propertyMeta->serializedName,

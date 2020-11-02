@@ -5,8 +5,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="klipper_serializer_extra.subscriber.doctrine_association"
-                 class="Klipper\Bundle\SerializerExtraBundle\Listener\DoctrineAssociationSubscriber">
+        <service id="klipper_serializer_extra.subscriber.doctrine_association_id"
+                 class="Klipper\Bundle\SerializerExtraBundle\Listener\DoctrineAssociationIdSubscriber">
             <tag name="jms_serializer.event_subscriber"/>
             <argument type="service" id="doctrine" />
         </service>
