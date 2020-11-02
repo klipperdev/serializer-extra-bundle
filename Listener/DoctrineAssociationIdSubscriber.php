@@ -12,11 +12,13 @@
 namespace Klipper\Bundle\SerializerExtraBundle\Listener;
 
 use Doctrine\Persistence\ManagerRegistry;
+use JMS\Serializer\Accessor\AccessorStrategyInterface;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\SerializationContext;
 use Klipper\Bundle\SerializerExtraBundle\Type\AssociationId;
 
 /**
@@ -26,12 +28,15 @@ class DoctrineAssociationIdSubscriber implements EventSubscriberInterface
 {
     protected ManagerRegistry $doctrine;
 
+    protected AccessorStrategyInterface $accessorStrategy;
+
     /**
      * @param ManagerRegistry $doctrine The doctrine registry
      */
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, AccessorStrategyInterface $accessorStrategy)
     {
         $this->doctrine = $doctrine;
+        $this->accessorStrategy = $accessorStrategy;
     }
 
     public static function getSubscribedEvents(): array
@@ -48,8 +53,9 @@ class DoctrineAssociationIdSubscriber implements EventSubscriberInterface
     public function onPreSerialize(ObjectEvent $event): void
     {
         $object = $event->getObject();
+        $context = $event->getContext();
 
-        if (!\is_object($object)) {
+        if (!\is_object($object) || !$context instanceof SerializationContext) {
             return;
         }
 
@@ -70,7 +76,7 @@ class DoctrineAssociationIdSubscriber implements EventSubscriberInterface
                     $classMeta->propertyMetadata[$i] = $staticPropMeta = new StaticPropertyMetadata(
                         $propertyMeta->class,
                         $propertyMeta->serializedName,
-                        $this->getValue($object)
+                        $this->getValue($object, $propertyMeta, $context)
                     );
                     $staticPropMeta->sinceVersion = $propertyMeta->sinceVersion;
                     $staticPropMeta->untilVersion = $propertyMeta->untilVersion;
@@ -87,19 +93,31 @@ class DoctrineAssociationIdSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function getValue($data)
+    /**
+     * @param mixed $object
+     *
+     * @throws
+     *
+     * @return null|int|string
+     */
+    private function getValue($object, PropertyMetadata $propertyMeta, SerializationContext $context)
     {
-        if (\is_object($data)) {
-            $class = \get_class($data);
-            $om = $this->doctrine->getManagerForClass($class);
+        if (\is_object($object)) {
+            $data = $this->accessorStrategy->getValue($object, $propertyMeta, $context);
 
-            if (null !== $om) {
-                $meta = $om->getClassMetadata($class);
-                $identifier = $meta->getIdentifierValues($data);
-                $data = 1 === \count($identifier) ? current($identifier) : $identifier;
+            if (\is_object($data)) {
+                $class = \get_class($data);
+                $om = $this->doctrine->getManagerForClass($class);
+
+                if (null !== $om) {
+                    $meta = $om->getClassMetadata($class);
+                    $identifier = $meta->getIdentifierValues($data);
+
+                    return \count($identifier) > 0 ? current($identifier) : null;
+                }
             }
         }
 
-        return $data;
+        return null;
     }
 }

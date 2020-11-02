@@ -9,6 +9,7 @@
                  class="Klipper\Bundle\SerializerExtraBundle\Listener\DoctrineAssociationIdSubscriber">
             <tag name="jms_serializer.event_subscriber"/>
             <argument type="service" id="doctrine" />
+            <argument type="service" id="jms_serializer.accessor_strategy" />
         </service>
     </services>
 </container>
