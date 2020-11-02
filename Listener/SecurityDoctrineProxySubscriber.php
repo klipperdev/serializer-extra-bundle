@@ -60,8 +60,10 @@ class SecurityDoctrineProxySubscriber implements EventSubscriberInterface
     private function loadObject(PreSerializeEvent $event): void
     {
         $object = $event->getObject();
+        $type = $event->getType();
+        $virtualType = !class_exists($type['name'], false);
 
-        if (\is_object($object)) {
+        if (\is_object($object) && !$virtualType) {
             if (interface_exists(LazyLoadingInterface::class) && $object instanceof LazyLoadingInterface) {
                 $object->initializeProxy();
             } elseif (method_exists($object, '__load')) {
