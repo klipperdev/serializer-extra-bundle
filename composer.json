@@ -17,7 +17,7 @@
         "jms/serializer-bundle": "^3.7.0"
     },
     "require-dev": {
-        "doctrine/common": "^2.10.0",
+        "doctrine/common": "^2.10.0|^3.1.0",
         "klipper/security-bundle": "^2.0.0"
     },
     "autoload": {
