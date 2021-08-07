@@ -14,7 +14,7 @@
     "require": {
         "php": "^7.4.0|^8.0.0",
         "symfony/framework-bundle": "^5.2.0",
-        "jms/serializer-bundle": "^3.7.0"
+        "jms/serializer-bundle": "^3.10.0"
     },
     "require-dev": {
         "doctrine/common": "^2.10.0|^3.1.0",
