@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('klipper_serializer_extra');
+
         /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
         $rootNode
@@ -40,6 +41,7 @@ class Configuration implements ConfigurationInterface
     protected function getExcludedBundlesNode(): ArrayNodeDefinition
     {
         $treeBuilder = new TreeBuilder('excluded_bundles');
+
         /** @var ArrayNodeDefinition $node */
         $node = $treeBuilder->getRootNode();
         $node
