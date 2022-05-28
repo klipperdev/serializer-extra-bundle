@@ -15,6 +15,7 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\PropertyMetadata;
+use Klipper\Component\DoctrineExtra\Util\ClassUtils;
 use Klipper\Component\Security\Permission\PermissionManagerInterface;
 
 /**
@@ -23,6 +24,8 @@ use Klipper\Component\Security\Permission\PermissionManagerInterface;
 class SecurityCheckerSubscriber implements EventSubscriberInterface
 {
     private PermissionManagerInterface $permissionManager;
+
+    private array $cache = [];
 
     public function __construct(PermissionManagerInterface $permissionManager)
     {
@@ -47,16 +50,21 @@ class SecurityCheckerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass(\get_class($object));
+        $class = ClassUtils::getClass($object);
 
-        if (null !== $classMeta) {
-            /** @var PropertyMetadata $propertyMeta */
-            foreach ($classMeta->propertyMetadata as $propertyMeta) {
-                if (null === $propertyMeta->excludeIf) {
-                    $propertyMeta->excludeIf = sprintf(
-                        '!is_granted("perm:read", [object, "%s"])',
-                        $propertyMeta->name
-                    );
+        if (!\in_array($class, $this->cache, true)) {
+            $this->cache[] = $class;
+            $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass($class);
+
+            if (null !== $classMeta) {
+                /** @var PropertyMetadata $propertyMeta */
+                foreach ($classMeta->propertyMetadata as $propertyMeta) {
+                    if (null === $propertyMeta->excludeIf) {
+                        $propertyMeta->excludeIf = sprintf(
+                            '!is_granted("perm:read", [object, "%s"])',
+                            $propertyMeta->name
+                        );
+                    }
                 }
             }
         }

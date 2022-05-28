@@ -16,12 +16,15 @@ use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use Klipper\Bundle\SerializerExtraBundle\Type\AssociationId;
+use Klipper\Component\DoctrineExtra\Util\ClassUtils;
 
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
  */
 class DoctrineAssociationIdSubscriber implements EventSubscriberInterface
 {
+    private array $cache = [];
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -41,22 +44,27 @@ class DoctrineAssociationIdSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass(\get_class($object));
+        $class = ClassUtils::getClass($object);
 
-        if (null !== $classMeta) {
-            /** @var PropertyMetadata $propertyMeta */
-            foreach ($classMeta->propertyMetadata as $propertyMeta) {
-                if (null === $propertyMeta->type) {
-                    continue;
-                }
+        if (!\in_array($class, $this->cache, true)) {
+            $this->cache[] = $class;
+            $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass($class);
 
-                if ('AssociationId' === $propertyMeta->type['name']) {
-                    $propertyMeta->type['name'] = AssociationId::class;
-                }
+            if (null !== $classMeta) {
+                /** @var PropertyMetadata $propertyMeta */
+                foreach ($classMeta->propertyMetadata as $propertyMeta) {
+                    if (null === $propertyMeta->type) {
+                        continue;
+                    }
 
-                if (is_a($propertyMeta->type['name'], AssociationId::class, true)
+                    if ('AssociationId' === $propertyMeta->type['name']) {
+                        $propertyMeta->type['name'] = AssociationId::class;
+                    }
+
+                    if (is_a($propertyMeta->type['name'], AssociationId::class, true)
                         && 0 !== substr_compare($propertyMeta->serializedName, '_id', -\strlen('_id'))) {
-                    $propertyMeta->serializedName .= '_id';
+                        $propertyMeta->serializedName .= '_id';
+                    }
                 }
             }
         }
