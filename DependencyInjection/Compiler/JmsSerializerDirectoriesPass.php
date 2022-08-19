@@ -27,7 +27,7 @@ class JmsSerializerDirectoriesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $def = $container->getDefinition('jms_serializer.metadata.file_locator');
+        $def = $container->getDefinition('jms_serializer.metadata.traceable_file_locator');
         $excludedBundles = $container->getParameter('klipper_serializer_extra.excluded_bundles');
         $bundles = $container->getParameter('kernel.bundles');
         $dirs = $def->getArgument(0);
