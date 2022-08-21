@@ -29,7 +29,7 @@ class DoctrineAssociationIdHandler implements SubscribingHandlerInterface
         $this->doctrine = $doctrine;
     }
 
-    public static function getSubscribingMethods()
+    public static function getSubscribingMethods(): array
     {
         $methods = [];
 
